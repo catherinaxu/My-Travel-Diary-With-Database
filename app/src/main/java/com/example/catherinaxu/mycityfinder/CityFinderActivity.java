@@ -43,17 +43,6 @@ public class CityFinderActivity extends Activity
         mf.getMapAsync(this);                  // calls onMapReady when loaded
 
         //places markers all markers that are currently in the database
-        List<Loc> locations = db.getAllLocations();
-
-        for (Loc loc : locations) {
-            Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
-                    " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
-            map.addMarker(new MarkerOptions()
-                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                            .title(loc.getFeatureName())
-                            .snippet(loc.getDescription())
-            );
-        }
     }
 
     @Override
@@ -72,6 +61,17 @@ public class CityFinderActivity extends Activity
         // code to run when the map has loaded
         map.setOnMarkerClickListener(this);
 
+        List<Loc> locations = db.getAllLocations();
+
+        for (Loc loc : locations) {
+            Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
+                    " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
+            map.addMarker(new MarkerOptions()
+                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                            .title(loc.getFeatureName())
+                            .snippet(loc.getDescription())
+            );
+        }
         // read user's current location, if possible
     }
 
@@ -92,6 +92,7 @@ public class CityFinderActivity extends Activity
                               .title(name)
                               .snippet(info)
             );
+            db.addLocation(name, latitude, longitude, info);
         }
     }
 
