@@ -99,5 +99,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return locationList;
     }
 
+    // deletes a record based on the ID
+    public void deleteLocation(Loc location) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_LOCATIONS, KEY_ID + " = ?", new String[] { String.valueOf(location.getId()) });
+        db.close();
+    }
+
     //TODO: add update, delete, and get count methods
 }

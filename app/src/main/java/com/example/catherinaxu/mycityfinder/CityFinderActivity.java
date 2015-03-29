@@ -38,7 +38,11 @@ public class CityFinderActivity extends Activity
         //change font of button
         Typeface font = Typeface.createFromAsset(getAssets(), "ostrich-regular.ttf");
         Button button = (Button) findViewById(R.id.button);
+        Button delete = (Button) findViewById(R.id.delete);
+        Button update = (Button) findViewById(R.id.update);
         button.setTypeface(font);
+        delete.setTypeface(font);
+        update.setTypeface(font);
 
         getActionBar().hide();
         MapFragment mf = (MapFragment) getFragmentManager().findFragmentById(R.id.the_map);
@@ -66,6 +70,7 @@ public class CityFinderActivity extends Activity
         List<Loc> locations = db.getAllLocations();
 
         for (Loc loc : locations) {
+            //db.deleteLocation(loc);
             Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
                     " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
             map.addMarker(new MarkerOptions()
@@ -133,6 +138,12 @@ public class CityFinderActivity extends Activity
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
+        Button delete = (Button) findViewById(R.id.delete);
+        Button update = (Button) findViewById(R.id.update);
+
+        delete.setVisibility(View.VISIBLE);
+        update.setVisibility(View.VISIBLE);
+
         return false;
     }
 }

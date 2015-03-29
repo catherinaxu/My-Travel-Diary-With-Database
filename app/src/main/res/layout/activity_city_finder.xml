@@ -51,4 +51,27 @@
         android:layout_alignBottom="@+id/the_map"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE"
+        android:textSize="20sp"
+        android:id="@+id/delete"
+        android:layout_above="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:layout_marginBottom="113dp"
+        android:visibility="invisible"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UPDATE"
+        android:textSize="20sp"
+        android:id="@+id/update"
+        android:layout_alignTop="@+id/delete"
+        android:layout_alignEnd="@+id/button"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
