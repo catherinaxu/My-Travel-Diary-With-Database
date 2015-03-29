@@ -76,7 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
 
-        Loc location = new Loc(cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
+        Loc location = new Loc(cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
                 cursor.getString(4));
 
         return location;
@@ -91,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Loc location = new Loc(cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
+                Loc location = new Loc(cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
                         cursor.getString(4));
                 locationList.add(location);
             } while (cursor.moveToNext());

@@ -19,7 +19,9 @@ public class CityFinderActivity extends Activity
 
     private GoogleMap map;
     private static final int GET_DESTINATION = 10;
+    private static final int NO_RESULT = 9;
     private static final String DEBUG = "DEBUG";
+    private static final String DEBUG2 = "DEBUG2";
     private DatabaseHandler db;
 
     @Override
@@ -82,7 +84,7 @@ public class CityFinderActivity extends Activity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == GET_DESTINATION) {
+        if (resultCode == GET_DESTINATION) {
             double latitude = intent.getDoubleExtra("latitude", 0.0);
             double longitude = intent.getDoubleExtra("longitude", 0.0);
             String name = intent.getStringExtra("name");
@@ -93,6 +95,9 @@ public class CityFinderActivity extends Activity
                               .snippet(info)
             );
             db.addLocation(name, latitude, longitude, info);
+
+        //if the person presses back before the result a result is obtained
+        } else if (resultCode == NO_RESULT) {
         }
     }
 

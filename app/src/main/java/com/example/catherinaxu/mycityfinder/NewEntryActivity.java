@@ -34,6 +34,7 @@ private static final int NUM_RESULTS = 10;
 private static final String INPUT = "input";
 private static final int GET_DESTINATION = 10;
 private static final int GET_DESCRIPTION = 11;
+private static final int NO_RESULT = 9;
 private static final int NUM_MATCHES_TO_DISPLAY = 10;
 private static List<String> posAddresses;
 private static List<Address> matches;
@@ -59,6 +60,13 @@ ListViewAdapter mAdapter;
 
         TextView status = (TextView) findViewById(R.id.currentColorLabel);
         status.setTypeface(font_reg);
+    }
+
+    //go back with the NO_RESULT result code
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult (NO_RESULT, intent);
+        finish();
     }
 
     public void putAddressInList(List<Address> matches) {
@@ -146,7 +154,8 @@ ListViewAdapter mAdapter;
     /* Passes relevant fields back to map so it can be added */
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == GET_DESCRIPTION) {
+        //pass information back
+        if (resultCode == GET_DESCRIPTION) {
             description = intent.getStringExtra("description");
 
             Intent newIntent = new Intent();
@@ -156,6 +165,9 @@ ListViewAdapter mAdapter;
             newIntent.putExtra("info", description);
             setResult(GET_DESTINATION, newIntent);
             finish();
+        }
+        //do nothing
+        if (resultCode == NO_RESULT) {
         }
     }
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 public class NewEntryDescriptionActivity extends Activity {
 
     private static final int GET_DESCRIPTION = 11;
+    private static final int NO_RESULT = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,13 @@ public class NewEntryDescriptionActivity extends Activity {
         Typeface font_reg = Typeface.createFromAsset(getAssets(), "ostrich-regular.ttf");
         Button button1 = (Button) findViewById(R.id.record);
         button1.setTypeface(font_reg);
+    }
+
+    //go back with the NO_RESULT result code
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult (NO_RESULT, intent);
+        finish();
     }
 
     public void setDescription(View view) {
