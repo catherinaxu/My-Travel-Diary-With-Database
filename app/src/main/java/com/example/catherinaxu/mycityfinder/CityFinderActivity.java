@@ -19,11 +19,14 @@ public class CityFinderActivity extends Activity
 
     private GoogleMap map;
     private HashMap<Marker, Loc> allMarkers = new HashMap();
+    private DatabaseHandler db;
+    private Marker clickedMarker;
+
     private static final int GET_DESTINATION = 10;
+    private static final int GET_DESCRIPTION = 11;
     private static final int NO_RESULT = 9;
     private static final String DEBUG = "DEBUG";
     private static final String DEBUG2 = "DEBUG2";
-    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +77,7 @@ public class CityFinderActivity extends Activity
         List<Loc> locations = db.getAllLocations();
 
         for (Loc loc : locations) {
-            //db.deleteLocation(loc)
-            Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
-                    " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
+            Log.d("debug", loc.feature_name);
             Marker marker = map.addMarker(new MarkerOptions()
                             .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
                             .title(loc.getFeatureName())
@@ -114,14 +115,36 @@ public class CityFinderActivity extends Activity
             double longitude = intent.getDoubleExtra("longitude", 0.0);
             String name = intent.getStringExtra("name");
             String info = intent.getStringExtra("info");
-            map.addMarker(new MarkerOptions()
-                              .position(new LatLng(latitude, longitude))
-                              .title(name)
-                              .snippet(info)
+            Marker marker = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude, longitude))
+                            .title(name)
+                            .snippet(info)
             );
+
             db.addLocation(name, latitude, longitude, info);
 
-        //if the person presses back before the result a result is obtained
+            Loc loc = db.getLocationByCoordinates(latitude, longitude);
+            allMarkers.put(marker, loc);
+            //if the person presses back before the result a result is obtained
+        } else if (resultCode == GET_DESCRIPTION) {
+            String description = intent.getStringExtra("description");
+
+            //delete old marker
+            Loc loc = allMarkers.get(clickedMarker);
+            allMarkers.remove(clickedMarker);
+            clickedMarker.setVisible(false);
+
+            Marker newMarker = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                            .title(loc.getFeatureName())
+                            .snippet(description)
+            );
+
+            //update new marker
+            loc.description = description;
+            allMarkers.put(newMarker, loc);
+
+            db.updateLocation(loc);
         } else if (resultCode == NO_RESULT) {
         }
     }
@@ -156,6 +179,7 @@ public class CityFinderActivity extends Activity
      * Called when user clicks on any of the city map markers. */
     @Override
     public boolean onMarkerClick(final Marker marker) {
+        final Loc loc = allMarkers.get(marker);
         Button delete = (Button) findViewById(R.id.delete);
         Button update = (Button) findViewById(R.id.update);
 
@@ -164,14 +188,19 @@ public class CityFinderActivity extends Activity
 
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Loc loc = allMarkers.get(marker);
                 db.deleteLocation(loc);
-
                 marker.setVisible(false);
                 allMarkers.remove(marker);
             }
         });
 
+        update.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                clickedMarker = marker;
+                Intent intent = new Intent(v.getContext(), NewEntryDescriptionActivity.class);
+                startActivityForResult(intent, GET_DESCRIPTION);
+            }
+        });
         return false;
     }
 }

@@ -48,7 +48,7 @@ public class NewEntryDescriptionActivity extends Activity {
         if (text.equals("")) {
             Toast.makeText(this, "Please enter your description.", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Entry successfully created!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.putExtra("description", text);
             setResult(GET_DESCRIPTION, intent);

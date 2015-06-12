@@ -35,8 +35,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_LOCATIONS + "(" +
                 KEY_ID + " INTEGER PRIMARY KEY," +
                 KEY_FEATURE_NAME + " TEXT," +
-                KEY_LATITUDE + " REAL," +
-                KEY_LONGITUDE + " REAL," +
+                KEY_LATITUDE + " TEXT," +
+                KEY_LONGITUDE + " TEXT," +
                 KEY_DESCRIPTION + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -57,27 +57,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //creating values
         ContentValues values = new ContentValues();
         values.put(KEY_FEATURE_NAME, feature_name);
-        values.put(KEY_LATITUDE, lat);
-        values.put(KEY_LONGITUDE, lng);
+        values.put(KEY_LATITUDE, String.valueOf(lat));
+        values.put(KEY_LONGITUDE, String.valueOf(lng));
         values.put(KEY_DESCRIPTION, description);
 
         db.insert(TABLE_LOCATIONS, null, values);
         db.close();
     }
 
-    // returns a location object given an id (the entry #)
-    public Loc getLocationById(int id) {
+    // returns a location object given coordinates
+    public Loc getLocationByCoordinates(double lat, double lng) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_LOCATIONS, new String[] { KEY_ID,
                 KEY_FEATURE_NAME, KEY_LATITUDE, KEY_LONGITUDE,
-                KEY_DESCRIPTION}, KEY_ID + "=?", new String[] {
-                String.valueOf(id) }, null, null, null, null);
+                KEY_DESCRIPTION}, KEY_LATITUDE + "= ? AND " + KEY_LONGITUDE + " = ?", new String[] {
+                String.valueOf(lat), String.valueOf(lng)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        Loc location = new Loc(cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
-                cursor.getString(4));
+        Loc location = new Loc(cursor.getInt(0), cursor.getString(1), Double.parseDouble(cursor.getString(2)),
+                Double.parseDouble(cursor.getString(3)), cursor.getString(4));
 
         return location;
     }
@@ -91,12 +91,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Loc location = new Loc(cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
-                        cursor.getString(4));
+                Loc location = new Loc(cursor.getInt(0), cursor.getString(1), Double.parseDouble(cursor.getString(2)),
+                        Double.parseDouble(cursor.getString(3)), cursor.getString(4));
                 locationList.add(location);
             } while (cursor.moveToNext());
         }
         return locationList;
+    }
+
+    public void updateLocation(Loc location) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DESCRIPTION, location.getDescription());
+
+        db.update(TABLE_LOCATIONS, values, KEY_ID + " = ?", new String[] { String.valueOf(location.getId()) });
     }
 
     // deletes a record based on the ID
@@ -106,5 +115,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    //TODO: add update, delete, and get count methods
+    //TODO: add update and get count methods
 }
