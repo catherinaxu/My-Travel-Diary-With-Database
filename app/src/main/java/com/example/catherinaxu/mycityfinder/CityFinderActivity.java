@@ -65,12 +65,15 @@ public class CityFinderActivity extends Activity
     @Override
     public void onMapLoaded() {
         // code to run when the map has loaded
-        map.setOnMarkerClickListener(this);
+
+        // disable toolbar
+        UiSettings uisettings = map.getUiSettings();
+        uisettings.setMapToolbarEnabled(false);
 
         List<Loc> locations = db.getAllLocations();
 
         for (Loc loc : locations) {
-            //db.deleteLocation(loc);
+            //db.deleteLocation(loc)
             Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
                     " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
             map.addMarker(new MarkerOptions()
@@ -79,7 +82,21 @@ public class CityFinderActivity extends Activity
                             .snippet(loc.getDescription())
             );
         }
-        // read user's current location, if possible
+        map.setOnMarkerClickListener(this);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng pt) {
+                Button delete = (Button) findViewById(R.id.delete);
+                Button update = (Button) findViewById(R.id.update);
+
+                delete.setVisibility(View.INVISIBLE);
+                update.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+
     }
 
     public void createNewEntry(View view) {
@@ -133,9 +150,7 @@ public class CityFinderActivity extends Activity
     }
 
     /*
-     * Called when user clicks on any of the city map markers.
-     * Adds a line from the user's location to that city.
-     */
+     * Called when user clicks on any of the city map markers. */
     @Override
     public boolean onMarkerClick(Marker marker) {
         Button delete = (Button) findViewById(R.id.delete);

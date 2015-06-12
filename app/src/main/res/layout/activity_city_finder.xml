@@ -42,7 +42,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create a New Entry"
+        android:text="CREATE A NEW ENTRY"
         android:onClick="createNewEntry"
         android:layout_marginBottom="15dp"
         android:textSize="25sp"
@@ -57,11 +57,10 @@
         android:layout_height="wrap_content"
         android:text="DELETE"
         android:textSize="25sp"
-        android:layout_marginStart="5dp"
         android:id="@+id/delete"
+        android:visibility="invisible"
         android:layout_alignTop="@+id/button"
-        android:layout_toEndOf="@+id/imageView"
-        android:visibility="invisible"/>
+        android:layout_toStartOf="@+id/button" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -69,10 +68,9 @@
         android:layout_height="wrap_content"
         android:text="UPDATE"
         android:textSize="25sp"
-        android:layout_marginEnd="5dp"
         android:id="@+id/update"
+        android:visibility="invisible"
         android:layout_alignTop="@+id/button"
-        android:layout_alignParentEnd="true"
-        android:visibility="invisible"/>
+        android:layout_toEndOf="@+id/button" />
 
 </RelativeLayout>
