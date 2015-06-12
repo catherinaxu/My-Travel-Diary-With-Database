@@ -18,6 +18,7 @@ public class CityFinderActivity extends Activity
         implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap map;
+    private HashMap<Marker, Loc> allMarkers = new HashMap();
     private static final int GET_DESTINATION = 10;
     private static final int NO_RESULT = 9;
     private static final String DEBUG = "DEBUG";
@@ -76,12 +77,14 @@ public class CityFinderActivity extends Activity
             //db.deleteLocation(loc)
             Log.d(DEBUG, "List size: " + locations.size() + " Feature name: " + loc.getFeatureName() + " Lat: " + loc.getLatitude() +
                     " Long: " + loc.getLongitude() + " Description: " + loc.getDescription());
-            map.addMarker(new MarkerOptions()
+            Marker marker = map.addMarker(new MarkerOptions()
                             .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
                             .title(loc.getFeatureName())
                             .snippet(loc.getDescription())
             );
+            allMarkers.put(marker, loc);
         }
+
         map.setOnMarkerClickListener(this);
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
@@ -152,12 +155,22 @@ public class CityFinderActivity extends Activity
     /*
      * Called when user clicks on any of the city map markers. */
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(final Marker marker) {
         Button delete = (Button) findViewById(R.id.delete);
         Button update = (Button) findViewById(R.id.update);
 
         delete.setVisibility(View.VISIBLE);
         update.setVisibility(View.VISIBLE);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Loc loc = allMarkers.get(marker);
+                db.deleteLocation(loc);
+
+                marker.setVisible(false);
+                allMarkers.remove(marker);
+            }
+        });
 
         return false;
     }
