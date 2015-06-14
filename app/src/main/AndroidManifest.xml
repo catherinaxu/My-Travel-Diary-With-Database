@@ -11,12 +11,12 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
+    a
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_globe"
         android:label="My Travel Diary"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -26,7 +26,7 @@
 
         <activity
             android:name=".CityFinderActivity"
-            android:label="@string/app_name" >
+            android:label="My Travel Diary" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,11 +35,12 @@
         </activity>
         <activity
             android:name=".NewEntryActivity"
-            android:label="@string/title_activity_new_entry" >
+            android:label="My Travel Diary"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name=".NewEntryDescriptionActivity"
-            android:label="@string/title_activity_new_entry_description" >
+            android:label="My Travel Diary" >
         </activity>
     </application>
 

@@ -31,7 +31,6 @@ import java.util.Locale;
 public class NewEntryActivity extends Activity {
 
 private static final int NUM_RESULTS = 10;
-private static final String INPUT = "input";
 private static final int GET_DESTINATION = 10;
 private static final int GET_DESCRIPTION = 11;
 private static final int NO_RESULT = 9;
@@ -60,6 +59,10 @@ ListViewAdapter mAdapter;
 
         TextView status = (TextView) findViewById(R.id.currentColorLabel);
         status.setTypeface(font_reg);
+
+        if (mAdapter != null) {
+            mAdapter.deselectAll();
+        }
     }
 
     //go back with the NO_RESULT result code
@@ -128,14 +131,16 @@ ListViewAdapter mAdapter;
                                 @Override
                                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                                     CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox);
-                                    mAdapter.deselectAll();
-                                    mAdapter.markSelected(position, !checkBox.isChecked());
-                                    mAdapter.notifyDataSetChanged();
+                                    if (!checkBox.isChecked()) {
+                                        mAdapter.deselectAll();
+                                        mAdapter.markSelected(position, !checkBox.isChecked());
+                                        mAdapter.notifyDataSetChanged();
 
-                                    address = matches.get(position);
+                                        address = matches.get(position);
 
-                                    Intent intent = new Intent(v.getContext(), NewEntryDescriptionActivity.class);
-                                    startActivityForResult(intent, GET_DESCRIPTION);
+                                        Intent intent = new Intent(v.getContext(), NewEntryDescriptionActivity.class);
+                                        startActivityForResult(intent, GET_DESCRIPTION);
+                                    }
                                 }
                             }
                     );
@@ -164,6 +169,7 @@ ListViewAdapter mAdapter;
             newIntent.putExtra("name", address.getFeatureName());
             newIntent.putExtra("info", description);
             setResult(GET_DESTINATION, newIntent);
+
             finish();
         }
         //do nothing
